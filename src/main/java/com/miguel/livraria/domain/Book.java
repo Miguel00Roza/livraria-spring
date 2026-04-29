@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 
 @Entity
@@ -29,16 +28,16 @@ public class Book {
     private int quantity;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "publisher_id")
+    @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;
 
-    @ManyToMany
-    @JoinTable(name = "authors_books")
-    List<Author> authors;
+    @ManyToOne
+    @JoinColumn(name = "authors_id", nullable = false)
+    private Author author;
 
     @NotNull
     @Column(nullable = false)
