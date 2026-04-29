@@ -1,34 +1,35 @@
 package com.miguel.livraria.service;
 
 import com.miguel.livraria.domain.Category;
+import com.miguel.livraria.exception.BadRequestException;
+import com.miguel.livraria.exception.NotFoundException;
 import com.miguel.livraria.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<Category> getAll() {
         return categoryRepository.findAll();
     }
 
-    public Category getCategoryById(long id) {
+    public Category getCategoryById(Long id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("ID must be greater than 0");
+            throw new BadRequestException("ID must be greater than 0");
         }
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Category not found"));
     }
 
-    public Category create(@RequestBody Category category) {
+    public Category create(Category category) {
         if(category.getName() == null || category.getName().isBlank()) {
-            throw new IllegalArgumentException("The category name cannot be empty");
+            throw new BadRequestException("The category name cannot be empty");
         }
 
         return categoryRepository.save(category);
